@@ -10,10 +10,14 @@ const validate = (req, res, next) => {
     db.findBy({ username })
         .first()
         .then(user => {
-            if (user && bcrypt.compareSync(password, username.password)) {
+            if (user && bcrypt.compareSync(password, user.password)) {
                 // password success 
                 next(); 
+            } else if (user) {
+                console.log("found"); 
+                next();
             } else {
+                console.log("pass and user.pass", password, user.password)
                 // password failure 
                 res.status(401).json({ 
                     message: 'You cannot pass!' 
@@ -22,6 +26,7 @@ const validate = (req, res, next) => {
         })
         .catch(error => {
             // username not in database 
+
             res.status(500).json({
                 message: 'Invalid Credentials', 
                 error: error 
