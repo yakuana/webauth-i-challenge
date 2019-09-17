@@ -13,9 +13,6 @@ const validate = (req, res, next) => {
             if (user && bcrypt.compareSync(password, user.password)) {
                 // password success 
                 next(); 
-            } else if (user) {
-                console.log("found"); 
-                next();
             } else {
                 console.log("pass and user.pass", password, user.password)
                 // password failure 
