@@ -12,6 +12,10 @@ router.post('/register', (req, res) => {
   
     db.add({ username, password: hash })
         .then(saved => {
+            // create a session for the new user and send back a cookie 
+            // (this automatically sends a cookie)
+            req.session.user = saved;
+            
             res.status(201).json(saved);
         })
         .catch(error => {
@@ -26,7 +30,7 @@ router.post('/login', (req, res) => {
         .first()
         .then(user => {
             if (user && bcrypt.compareSync(password, user.password)) {
-                // sign in user (store their info)
+                // passing info about the user to the current session (this automatically sends a cookie)
                 req.session.user = user;
                 res.status(200).json({ message: `Welcome ${user.username}!` });
             } else {

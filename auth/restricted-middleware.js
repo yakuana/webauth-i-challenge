@@ -1,7 +1,7 @@
 //  第二天
 
 module.exports = (req, res, next) => {
-    // do we have information about the user in our session?
+    // grab the cookie and check if the user is valid 
     if (req.session && req.session.user) {
         // successful
         next();
