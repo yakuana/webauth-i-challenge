@@ -26,6 +26,8 @@ router.post('/login', (req, res) => {
         .first()
         .then(user => {
             if (user && bcrypt.compareSync(password, user.password)) {
+                // sign in user (store their info)
+                req.session.user = user;
                 res.status(200).json({ message: `Welcome ${user.username}!` });
             } else {
                 res.status(401).json({ message: 'You cannot pass!' });
@@ -50,6 +52,31 @@ router.get('/hash', (req, res) => {
     // hash the name
     const hash = bcrypt.hashSync(name, 8); 
     res.send(`the hash for ${name} is ${hash}`);
+});
+
+router.get('/logout', (req, res) => {
+    if (req.session) {
+        // user is logged in 
+        req.session.destroy(err => {
+            if (err) {
+                //  could not destroy session 
+                res.status(500).json({ 
+                    message: 'An error occured while logging out.', 
+                    error: err 
+                });
+            } else {
+                // destroyed session 
+                res.status(200).json({
+                    message: 'Good bye!'
+                });
+            }
+        });
+    } else {
+        // user is not logged in 
+        res.status(200).json({ 
+            message: 'The users has already logged out' 
+        })
+    }
 });
 
 module.exports = router;

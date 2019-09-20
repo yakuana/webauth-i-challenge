@@ -11,7 +11,7 @@ module.exports = (req, res, next) => {
             message: 'You shall not pass!' 
         });
     }
-  };
+};
   
 
 // 第一天
